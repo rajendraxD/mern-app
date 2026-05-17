@@ -14,6 +14,12 @@ export const requestLogger = (req, res, next) => {
   });
   const method = req.method;
   const url = req.url;
-  console.log(`[${timestamp}] ${method} ${url}`);
+  const statusCode = res.statusCode;
+  console.log(`[${timestamp}] ${statusCode || "Unknown"} ${method} ${url}`);
+  next();
+};
+
+export const addTimeStamp = (req, res, next) => {
+  req.requestTime = new Date().toISOString();
   next();
 };
