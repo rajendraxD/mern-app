@@ -6,6 +6,14 @@ import { addTimeStamp, requestLogger } from "./middleware/custom.middleware.js";
 import { globalErrorHandler } from "./middleware/errorHandler.middleware.js";
 import { urlVersioning } from "./middleware/urlVersioning.middleware.js";
 import { rateLimiter } from "./middleware/rateLimiter.middleware.js";
+import userRouter from "./routers/user.router.js";
+
+// Uncaught Exception coming from synchronous code
+process.on("uncaughtException", (err) => {
+  console.error("UNCAUGHT EXCEPTION! 💥 Shutting down...");
+  console.error(err.name, err.message);
+  process.exit(1);
+});
 
 const app = express();
 // Middleware
@@ -16,16 +24,25 @@ app.use(rateLimiter());
 
 // Routes
 app.use(urlVersioning("v1"));
-// app.use("/api/v1", userRouter);
 app.get("/api/v1/", (req, res) => {
   res.json({ status: "success", message: "API is healthy" });
 });
+app.use("/api/v1/users", userRouter);
 
 //global error handler
 app.use(globalErrorHandler);
 
 // Start the server
 const PORT = env.PORT;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+});
+
+// Unhandled Rejection coming from asynchronous code like database connection
+process.on("unhandledRejection", (err) => {
+  console.error("UNHANDLED REJECTION! 💥 Shutting down...");
+  console.error(err.name, err.message);
+  server.close(() => {
+    process.exit(1);
+  });
 });

@@ -9,7 +9,7 @@ const getEnv = (name, defaultValue) => {
 
 const env = {
   //   APP_NAME: getEnv("APP_NAME"),
-  // NODE_ENV: getEnv("NODE_ENV"),
+  NODE_ENV: getEnv("NODE_ENV"),
   PORT: getEnv("PORT", 5000),
   MONGODB_URL: getEnv("MONGODB_URL"),
   DB_NAME: getEnv("DB_NAME"),
