@@ -1,7 +1,7 @@
 /**
  * Wrapper for async functions to catch errors and pass them to next()
  */
-export const asyncHandler = (fn) => (req, res, next) => {
+export const tryCatchHandler = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
 };
 // export const catchAsync = (fn) => {

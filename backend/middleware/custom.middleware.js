@@ -15,7 +15,10 @@ export const requestLogger = (req, res, next) => {
   const method = req.method;
   const url = req.url;
   const statusCode = res.statusCode;
-  console.log(`[${timestamp}] ${statusCode || "Unknown"} ${method} ${url}`);
+  const logLevel = statusCode >= 500 ? "error" : statusCode >= 400 ? "warn" : "info";
+  console[logLevel](`[${timestamp}] ${statusCode} ${method} ${url}`);
+  // console.log(`[${timestamp}] ${statusCode} ${method} ${url}`);
+  // console.log(`[${timestamp}] ${statusCode || "Unknown"} ${method} ${url}`);
   next();
 };
 

@@ -1,12 +1,11 @@
 import {
-  asyncHandler,
   ApiError,
+  tryCatchHandler,
 } from "../middleware/errorHandler.middleware.js";
-export const register = asyncHandler(async (req, res) => {
-  const { username, email, password } = req.body;
-  if (!username || !email || !password) {
-    throw new ApiError("Please provide username, email and password.", 400);
-  }
+import sanitize from "mongo-sanitize";
+export const register = tryCatchHandler(async (req, res) => {
+  const { username, email, password } = sanitize(req.body);
+
   res.status(201).json({
     status: "success",
     message: "User registered successfully",
