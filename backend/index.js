@@ -16,11 +16,11 @@ app.use(configureCors());
 app.use(rateLimiter());
 
 // Routes
-app.use("/api/v1", urlVersioning("v1"));
+app.use(urlVersioning("v1"));
 // app.use("/api/v1", userRouter);
 
 app.get("/api/v1/", (req, res) => {
-  res.send("Hello, World!");
+  res.json({ status: "success", message: "API is healthy" });
 });
 
 //global error handler
