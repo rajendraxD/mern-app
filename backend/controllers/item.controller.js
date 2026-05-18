@@ -1,5 +1,6 @@
 import { tryCatchHandler } from "../middleware/errorHandler.middleware.js";
 import ItemModel from "../models/item.model.js";
+import {publishEvent} from "../utils/rabbitMQ.js";
 
 export const addItem = tryCatchHandler(async (req, res) => {
   const { name } = req.body;
@@ -7,6 +8,7 @@ export const addItem = tryCatchHandler(async (req, res) => {
     return res.status(400).json({ message: "Name is required" });
   }
   const newItem = await ItemModel.create({ name });
+
   res.status(201).json(newItem);
 });
 export const updateItem = tryCatchHandler(async (req, res) => {
