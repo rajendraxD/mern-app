@@ -38,7 +38,19 @@ app.use(rateLimiter());
 // Routes
 app.use(urlVersioning("v1"));
 app.get("/api/v1/", (req, res) => {
-  res.json({ status: "success", message: "API is healthy" });
+  res.json({
+    status: "success",
+    message: "API is healthy",
+    endpoints: {
+      items: {
+        addItem: "POST /api/v1/items/addItem",
+        updateItem: "POST /api/v1/items/updateItem/:id",
+        deleteItem: "POST /api/v1/items/deleteItem/:id",
+        getAllItems: "GET /api/v1/items/getAllItems",
+        getItemById: "GET /api/v1/items/getItemById/:id",
+      },
+    },
+  });
 });
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/items", itemRouter);

@@ -5,7 +5,7 @@ export default function configureCors() {
     origin: (origin, callback) => {
       const allowedOrigins = [
         "http://localhost:3000", //local development
-        "https://your-production-domain.com", //production domain
+        "https://mern-app-vagd.onrender.com"
       ];
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true); // Allow requests with no origin (like mobile apps or curl) and from allowed origins
