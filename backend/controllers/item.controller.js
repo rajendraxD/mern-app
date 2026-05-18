@@ -29,7 +29,7 @@ export const updateItem = tryCatchHandler(async (req, res) => {
   if (!updatedItem) {
     return res.status(404).json({ message: "Item not found" });
   }
-  await invalidateCacheJob([`items:${id}`]);
+  await invalidateCacheJob(["items:*"]);
   res.status(200).json(updatedItem);
 });
 export const deleteItem = tryCatchHandler(async (req, res) => {
