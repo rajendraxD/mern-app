@@ -1,5 +1,10 @@
 export const requestLogger = (req, res, next) => {
-  if (req.url === "/favicon.ico") {
+  // Ignore
+  const ignoredPaths = [
+    "/favicon.ico",
+    "/.well-known/appspecific/com.chrome.devtools.json",
+  ];
+  if (ignoredPaths.includes(req.url)) {
     return next();
   }
 
@@ -27,14 +32,10 @@ export const requestLogger = (req, res, next) => {
 
     // Log level based on status code
     const logLevel =
-      statusCode >= 500
-        ? "error"
-        : statusCode >= 400
-        ? "warn"
-        : "info";
+      statusCode >= 500 ? "error" : statusCode >= 400 ? "warn" : "info";
 
     console[logLevel](
-      `[${timestamp}] ${statusCode} ${method} ${url} - ${responseTime}`
+      `[${timestamp}] ${statusCode} ${method} ${url} - ${responseTime}`,
     );
   });
 

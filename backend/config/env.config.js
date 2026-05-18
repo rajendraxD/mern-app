@@ -14,13 +14,14 @@ const env = {
 
   MONGODB_URL: getEnv("MONGODB_URL"),
   DB_NAME: getEnv("DB_NAME"),
-  
+
   FRONTEND_URL: getEnv("FRONTEND_URL"),
 
   //Redis
   REDIS_ENABLED: getEnv("REDIS_ENABLED", false).toLowerCase() === "true",
   REDIS_URL: getEnv("REDIS_URL"),
-  
+  REDIS_EXPIRY_SECONDS: getEnv("REDIS_EXPIRY_SECONDS", 3600),
+
   //Access token
   // ACCESS_TOKEN_SECRET: getEnv("ACCESS_TOKEN_SECRET"),
   // ACCESS_TOKEN_EXPIRE: getEnv("ACCESS_TOKEN_EXPIRE"),

@@ -2,9 +2,10 @@ import env from "../config/env.config.js";
 import Redis from "ioredis";
 
 let redisClient = null;
+const REDIS_EXPIRY_SECONDS = env.REDIS_EXPIRY_SECONDS; // 1 hour
 
 function initRedis() {
-  if (env.REDIS_ENABLED !== true) {
+  if (env.REDIS_ENABLED === "true") {
     console.info("Redis is disabled");
     return;
   }
@@ -19,10 +20,14 @@ export async function redisGet(key) {
   return await redisClient.get(key);
 }
 
-export async function redisSet(key, value, expirySeconds = null) {
+export async function redisSet(
+  key,
+  value,
+  expirySeconds = REDIS_EXPIRY_SECONDS,
+) {
   if (!redisClient) return null;
   if (expirySeconds) {
-    return await redisClient.set(key, value, 'EX', expirySeconds);
+    return await redisClient.set(key, value, "EX", expirySeconds);
   }
   return await redisClient.set(key, value);
 }
@@ -42,8 +47,16 @@ export async function redisGetJson(key) {
   return data ? JSON.parse(data) : null;
 }
 
-export async function redisSetJson(key, value, expirySeconds = null) {
+export async function redisSetJson(
+  key,
+  value,
+  expirySeconds = REDIS_EXPIRY_SECONDS,
+) {
   return await redisSet(key, JSON.stringify(value), expirySeconds);
 }
 
+// Helper function
+export function isRedisConnected() {
+  return redisClient !== null;
+}
 initRedis();
