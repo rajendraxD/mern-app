@@ -5,14 +5,11 @@ import {
 import sanitize from "mongo-sanitize";
 import axios from "axios";
 export const register = tryCatchHandler(async (req, res) => {
-  // const { username, email, password } = sanitize(req.body);
-
-  const user = axios.get(`https://jsonplaceholder.typicode.com/users`);
-  console.log(JSON.parse(JSON.stringify(user)));
-  console.log('------------------');
-  // res.status(201).json({
-  //   status: "success",
-  //   message: "User registered successfully",
-  //   data: JSON.parse(JSON.stringify(user)),
-  // });
+  // Fetch placeholder users
+  const {data: users} = await axios.get(`https://jsonplaceholder.typicode.com/users`);
+  // Return the fetched users
+  res.status(200).json({
+    status: "success",
+    data: users,
+  });
 });
