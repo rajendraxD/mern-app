@@ -1,11 +1,12 @@
 import cors from "cors";
+import env from "../config/env.config.js";
 
 export default function configureCors() {
   return cors({
     origin: (origin, callback) => {
       const allowedOrigins = [
+        env.FRONTEND_URL,
         "http://localhost:5173", //local development
-        "https://mern-app-frontend-3zxu.onrender.com"
       ];
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true); // Allow requests with no origin (like mobile apps or curl) and from allowed origins
