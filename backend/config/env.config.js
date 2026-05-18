@@ -15,6 +15,8 @@ const env = {
   DB_NAME: getEnv("DB_NAME"),
   FRONTEND_URL: getEnv("FRONTEND_URL"),
 
+  REDIS_URL: getEnv("REDIS_URL"),
+  
   //Access token
   // ACCESS_TOKEN_SECRET: getEnv("ACCESS_TOKEN_SECRET"),
   // ACCESS_TOKEN_EXPIRE: getEnv("ACCESS_TOKEN_EXPIRE"),
