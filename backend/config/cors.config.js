@@ -6,6 +6,7 @@ export default function configureCors() {
     origin: (origin, callback) => {
       const allowedOrigins = [
         env.FRONTEND_URL,
+        "https://mern-app-frontend-3zxu.onrender.com",
         "http://localhost:5173", //local development
       ];
       if (!origin || allowedOrigins.includes(origin)) {
