@@ -16,7 +16,6 @@ export default function HomePage() {
     }, []);
 
     const handleDelete = async (id) => {
-
         await deleteItemService(id);
         setItems((prev) => prev.filter((item) => item._id !== id));
     };
