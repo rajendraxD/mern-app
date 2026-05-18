@@ -14,6 +14,8 @@ export const addItem = tryCatchHandler(async (req, res) => {
   }
   const newItem = await ItemModel.create({ name });
 
+  await invalidateCacheJob(["items:*"]);
+
   res.status(201).json(newItem);
 });
 export const updateItem = tryCatchHandler(async (req, res) => {
@@ -27,6 +29,7 @@ export const updateItem = tryCatchHandler(async (req, res) => {
   if (!updatedItem) {
     return res.status(404).json({ message: "Item not found" });
   }
+  await invalidateCacheJob([`items:${id}`]);
   res.status(200).json(updatedItem);
 });
 export const deleteItem = tryCatchHandler(async (req, res) => {
@@ -37,7 +40,7 @@ export const deleteItem = tryCatchHandler(async (req, res) => {
     return res.status(404).json({ message: "Item not found" });
   }
 
-  await invalidateCacheJob(["items:*", `items:${id}`]);
+  await invalidateCacheJob(["items:*"]);
 
   res.status(200).json({ message: "Item deleted successfully" });
 });
