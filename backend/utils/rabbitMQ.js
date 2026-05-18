@@ -32,6 +32,9 @@ export const publishEvent = async (type, payload) => {
 };
 
 export const invalidateCacheJob = async (cacheKey) => {
+  if(!env.REDIS_ENABLED){
+    return;
+  }
   try {
     const payload = {
       action: "invalidate_cache",

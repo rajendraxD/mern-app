@@ -5,7 +5,7 @@ export let redisClient = null;
 const REDIS_EXPIRY_SECONDS = env.REDIS_EXPIRY_SECONDS; // 1 hour
 
 function initRedis() {
-  if (env.REDIS_ENABLED === "true") {
+  if (!env.REDIS_ENABLED) {
     console.info("Redis is disabled");
     return;
   }

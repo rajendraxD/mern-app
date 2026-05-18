@@ -23,9 +23,11 @@ process.on("uncaughtException", (err) => {
 
 //connect database
 await connectDB();
-//connect to rabbitMQ
-await connectRabbitMQ();
-startItemConsumer();
+// Connect to RabbitMQ only if Redis is enabled
+if (env.REDIS_ENABLED) {
+  await connectRabbitMQ();
+  startItemConsumer();
+}
 const app = express();
 // Middleware
 app.use(requestLogger, addTimeStamp);
