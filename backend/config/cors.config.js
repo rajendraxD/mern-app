@@ -4,7 +4,7 @@ export default function configureCors() {
   return cors({
     origin: (origin, callback) => {
       const allowedOrigins = [
-        "http://localhost:3000", //local development
+        "http://localhost:5173", //local development
         "https://mern-app-vagd.onrender.com"
       ];
       if (!origin || allowedOrigins.includes(origin)) {
