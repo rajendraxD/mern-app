@@ -1,7 +1,11 @@
 import { tryCatchHandler } from "../middleware/errorHandler.middleware.js";
 import ItemModel from "../models/item.model.js";
-import { publishEvent } from "../utils/rabbitMQ.js";
-import { isRedisConnected, redisGetJson, redisSetJson } from "../utils/redis.utils.js";
+import { invalidateCacheJob, publishEvent } from "../utils/rabbitMQ.js";
+import {
+  isRedisConnected,
+  redisGetJson,
+  redisSetJson,
+} from "../utils/redis.utils.js";
 
 export const addItem = tryCatchHandler(async (req, res) => {
   const { name } = req.body;
@@ -32,9 +36,9 @@ export const deleteItem = tryCatchHandler(async (req, res) => {
   if (!deletedItem) {
     return res.status(404).json({ message: "Item not found" });
   }
-  await publishEvent("item.deleted", {
-    id: deletedItem._id,
-  });
+
+  await invalidateCacheJob(["items:*", `items:${id}`]);
+
   res.status(200).json({ message: "Item deleted successfully" });
 });
 
@@ -50,7 +54,7 @@ export const getAllItems = tryCatchHandler(async (req, res) => {
 
   if (isRedisConnected()) {
     console.log("Setting Redis cache for items:getAllItems");
-    await redisSetJson(`items:getAllItems`, items)
+    await redisSetJson(`items:getAllItems`, items);
   }
 
   res.status(200).json(items);

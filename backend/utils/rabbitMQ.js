@@ -10,11 +10,6 @@ export const connectRabbitMQ = async () => {
     const connection = await amqplib.connect(env.RABBITMQ_URL);
 
     channel = await connection.createChannel();
-
-    // await channel.assertQueue("item_events", {
-    //   durable: true,
-    // });
-
     console.log("✅ RabbitMQ connected");
   } catch (err) {
     console.error("❌ Failed to connect to RabbitMQ", err);
@@ -30,13 +25,7 @@ export const publishEvent = async (type, payload) => {
     durable: true,
   });
 
-  const event = {
-    type,
-    payload,
-    createdAt: new Date().toISOString(),
-  };
-
-  channel.sendToQueue("item_events", Buffer.from(JSON.stringify(event)), {
+  channel.sendToQueue(type, Buffer.from(JSON.stringify(payload)), {
     persistent: true,
   });
   // await channel.close();
@@ -48,7 +37,7 @@ export const invalidateCacheJob = async (cacheKey) => {
       action: "invalidate_cache",
       key: cacheKey,
     };
-    await publishEvent("invalidate_cache", payload);
+    await publishEvent("cache_invalidate", payload);
     console.log("✅ Cache invalidation event published to RabbitMQ");
   } catch (err) {
     console.error("❌ Failed to Publish cache on RabbitMQ", err);

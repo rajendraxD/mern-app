@@ -1,8 +1,13 @@
 import amqplib from "amqplib";
 import Redis from "ioredis";
 import env from "../config/env.config.js";
-import { isRedisConnected, redisDel } from "../utils/redis.utils.js";
+import {
+  isRedisConnected,
+  redisDel,
+  redisSetJson,
+} from "../utils/redis.utils.js";
 import { redisClient } from "../utils/redis.utils.js";
+import ItemModel from "../models/item.model.js";
 
 const RABBITMQ_URL = env.RABBITMQ_URL;
 
@@ -10,9 +15,7 @@ export const startItemConsumer = async () => {
   try {
     const conn = await amqplib.connect(RABBITMQ_URL);
     const channel = await conn.createChannel();
-    await channel.assertQueue("item-events", { durable: true });
-
-    const queueName = "invalidate_cache"; //publishToQueue
+    const queueName = "cache_invalidate"; //publishToQueue
     await channel.assertQueue(queueName, { durable: true });
 
     console.log("✅ Item-consumer is ready to receive messages...");
@@ -34,6 +37,9 @@ export const startItemConsumer = async () => {
                 );
 
                 //action after cache invalidation - publish event to rabbitMQ
+                const items = await ItemModel.find().sort({ createdAt: -1 });
+                await redisSetJson(`items:getAllItems`, items);
+                console.log("Cache rebuild with key:" + "items:getAllItems");
               }
             }
           }
