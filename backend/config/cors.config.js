@@ -1,5 +1,5 @@
 import cors from "cors";
-import env from "../config/env.config.js";
+import env from "./env.config.js";
 
 export default function configureCors() {
   return cors({
