@@ -7,6 +7,8 @@ import { globalErrorHandler } from "./middleware/errorHandler.middleware.js";
 import { urlVersioning } from "./middleware/urlVersioning.middleware.js";
 import { rateLimiter } from "./middleware/rateLimiter.middleware.js";
 import userRouter from "./routers/user.router.js";
+//connect to redis
+import "./utils/redis.utils.js";
 
 // Uncaught Exception coming from synchronous code
 process.on("uncaughtException", (err) => {

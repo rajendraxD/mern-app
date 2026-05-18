@@ -11,10 +11,14 @@ const env = {
   //   APP_NAME: getEnv("APP_NAME"),
   NODE_ENV: getEnv("NODE_ENV"),
   PORT: getEnv("PORT", 5000),
+
   MONGODB_URL: getEnv("MONGODB_URL"),
   DB_NAME: getEnv("DB_NAME"),
+  
   FRONTEND_URL: getEnv("FRONTEND_URL"),
 
+  //Redis
+  REDIS_ENABLED: getEnv("REDIS_ENABLED", false).toLowerCase() === "true",
   REDIS_URL: getEnv("REDIS_URL"),
   
   //Access token
