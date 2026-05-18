@@ -25,8 +25,7 @@ process.on("uncaughtException", (err) => {
 await connectDB();
 //connect to rabbitMQ
 await connectRabbitMQ();
-await startItemConsumer().catch(console.error);
-
+startItemConsumer();
 const app = express();
 // Middleware
 app.use(requestLogger, addTimeStamp);
@@ -48,7 +47,7 @@ app.use(globalErrorHandler);
 // Start the server
 const PORT = env.PORT;
 const server = app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`✅ Server is running on port ${PORT}`);
 });
 
 // Unhandled Rejection coming from asynchronous code like database connection
