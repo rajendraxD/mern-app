@@ -11,6 +11,8 @@ import itemRouter from "./routers/item.router.js";
 //connect to redis
 import "./utils/redis.utils.js";
 import connectDB from "./config/db.config.js";
+import { connectRabbitMQ } from "./utils/rabbitMQ.js";
+import { startItemConsumer } from "./consumers/item.consumer.js";
 
 // Uncaught Exception coming from synchronous code
 process.on("uncaughtException", (err) => {
@@ -21,6 +23,9 @@ process.on("uncaughtException", (err) => {
 
 //connect database
 await connectDB();
+//connect to rabbitMQ
+await connectRabbitMQ();
+await startItemConsumer().catch(console.error);
 
 const app = express();
 // Middleware

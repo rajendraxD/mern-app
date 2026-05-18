@@ -1,6 +1,7 @@
 import { tryCatchHandler } from "../middleware/errorHandler.middleware.js";
 import ItemModel from "../models/item.model.js";
-import {publishEvent} from "../utils/rabbitMQ.js";
+import { publishEvent } from "../utils/rabbitMQ.js";
+import { isRedisConnected, redisGetJson, redisSetJson } from "../utils/redis.utils.js";
 
 export const addItem = tryCatchHandler(async (req, res) => {
   const { name } = req.body;
@@ -27,14 +28,31 @@ export const updateItem = tryCatchHandler(async (req, res) => {
 export const deleteItem = tryCatchHandler(async (req, res) => {
   const { id } = req.params;
   const deletedItem = await ItemModel.findByIdAndDelete(id);
+
   if (!deletedItem) {
     return res.status(404).json({ message: "Item not found" });
   }
+  await publishEvent("item.deleted", {
+    id: deletedItem._id,
+  });
   res.status(200).json({ message: "Item deleted successfully" });
 });
 
 export const getAllItems = tryCatchHandler(async (req, res) => {
+  if (isRedisConnected()) {
+    console.log("Getting Redis cache for items:getAllItems");
+    const cachedItems = await redisGetJson(`items:getAllItems`);
+    if (cachedItems) {
+      return res.status(200).json(cachedItems);
+    }
+  }
   const items = await ItemModel.find().sort({ createdAt: -1 });
+
+  if (isRedisConnected()) {
+    console.log("Setting Redis cache for items:getAllItems");
+    await redisSetJson(`items:getAllItems`, items)
+  }
+
   res.status(200).json(items);
 });
 

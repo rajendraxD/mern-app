@@ -1,7 +1,7 @@
 import env from "../config/env.config.js";
 import Redis from "ioredis";
 
-let redisClient = null;
+export let redisClient = null;
 const REDIS_EXPIRY_SECONDS = env.REDIS_EXPIRY_SECONDS; // 1 hour
 
 function initRedis() {

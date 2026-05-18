@@ -1,19 +1,38 @@
+import env from "../config/env.config.js";
+import amqplib from "amqplib";
 
-  import env from "../config/env.js";
-  import amqplib from "amqplib";
-  
-  const RABBIT_URL = env.RABBIT_URL || "amqp://localhost";
+const RABBIT_URL = env.RABBIT_URL || "amqp://localhost";
 
-  export const getChannel = async () => {
-    const conn = await amqplib.connect(RABBIT_URL);
-    const ch = await conn.createChannel();
-    await ch.assertQueue("item-events", { durable: true });
-    return ch;
+let channel;
+
+export const connectRabbitMQ = async () => {
+  const connection = await amqplib.connect(
+    env.RABBITMQ_URL || "amqp://guest:guest@localhost:5672",
+  );
+
+  channel = await connection.createChannel();
+
+  await channel.assertQueue("item_events", {
+    durable: true,
+  });
+
+  console.log("RabbitMQ connected");
+};
+
+export const publishEvent = async (type, payload) => {
+  if (!channel) {
+    console.warn("RabbitMQ channel not ready");
+    return;
+  }
+
+  const event = {
+    type,
+    payload,
+    createdAt: new Date().toISOString(),
   };
 
-  export const publishEvent = async (type, payload) => {
-    const ch = await getChannel();
-    const msg = Buffer.from(JSON.stringify({ type, payload }));
-    ch.sendToQueue("item-events", msg, { persistent: true });
-    await ch.close();
-  };
+  channel.sendToQueue("item_events", Buffer.from(JSON.stringify(event)), {
+    persistent: true,
+  });
+  await channel.close();
+};
