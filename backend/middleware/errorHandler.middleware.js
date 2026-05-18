@@ -83,7 +83,7 @@ const handleJWTExpiredError = () =>
   new ApiError("Your token has expired! Please log in again.", 401);
 
 const sendErrorDev = (err, res) => {
-  // console.error("ERROR 💥", err);
+  console.error("ERROR 💥", err);
   res.status(err.statusCode).json({
     status: err.status,
     error: err,
@@ -103,7 +103,7 @@ const sendErrorProd = (err, res) => {
     });
   } else {
     // Programming or other unknown error: don't leak error details
-    // console.error("ERROR 💥", err);
+    console.error("ERROR 💥", err);
     res.status(500).json({
       status: "error",
       message: "Internal Server Error",

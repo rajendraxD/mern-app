@@ -7,8 +7,10 @@ import { globalErrorHandler } from "./middleware/errorHandler.middleware.js";
 import { urlVersioning } from "./middleware/urlVersioning.middleware.js";
 import { rateLimiter } from "./middleware/rateLimiter.middleware.js";
 import userRouter from "./routers/user.router.js";
+import itemRouter from "./routers/item.router.js";
 //connect to redis
 import "./utils/redis.utils.js";
+import connectDB from "./config/db.config.js";
 
 // Uncaught Exception coming from synchronous code
 process.on("uncaughtException", (err) => {
@@ -16,6 +18,9 @@ process.on("uncaughtException", (err) => {
   console.error(err.name, err.message);
   process.exit(1);
 });
+
+//connect database
+await connectDB();
 
 const app = express();
 // Middleware
@@ -30,6 +35,7 @@ app.get("/api/v1/", (req, res) => {
   res.json({ status: "success", message: "API is healthy" });
 });
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/items", itemRouter);
 
 //global error handler
 app.use(globalErrorHandler);

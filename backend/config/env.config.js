@@ -13,7 +13,7 @@ const env = {
   PORT: getEnv("PORT", 5000),
 
   MONGODB_URL: getEnv("MONGODB_URL"),
-  DB_NAME: getEnv("DB_NAME"),
+  // DB_NAME: getEnv("DB_NAME"),
 
   FRONTEND_URL: getEnv("FRONTEND_URL"),
 

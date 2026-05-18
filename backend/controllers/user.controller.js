@@ -41,3 +41,4 @@ export const register = tryCatchHandler(async (req, res) => {
     data: users,
   });
 });
+
